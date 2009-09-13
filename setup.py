@@ -18,7 +18,7 @@ setup(
     license="BSD",
     author="Luke Tucker",
     author_email="ltucker@openplans.org",
-    url="http://intertubes.me",
+    url="http://github.com/ltucker/giblets",
     install_requires=[
         "zope.interface",
     ],
