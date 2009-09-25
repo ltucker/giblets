@@ -18,11 +18,11 @@
 #         Christopher Lenz <cmlenz@gmx.de>
 
 
-from zope.interface import Interface, implementedBy, implements
-from zope.interface.advice import addClassAdvisor, isClassAdvisor
+from zope.interface import Interface, implementedBy, implements, implementsOnly
+from zope.interface.advice import addClassAdvisor
 
 __all__ = ['Component', 'ComponentManager', 'ExtensionPoint', 'ExtensionInterface', 
-           'implements', 'ExtensionError',  'provides_extensions', 
+           'implements', 'implementsOnly', 'ExtensionError',  'provides_extensions', 
            'BlacklistComponentManager', 'WhitelistComponentManager']
 
 class ExtensionError(Exception):

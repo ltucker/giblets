@@ -345,6 +345,41 @@ def test_abstract_component():
     assert len(thingbox.things) == 1
     assert _has_exactly(1, ConcreteThing, thingbox.things)
     
+def test_implementsOnly():
+    _clear_registry()
+    from giblets import Component, ComponentManager, ExtensionPoint, ExtensionInterface, implements, implementsOnly
+
+    class ICog(ExtensionInterface):
+        pass
+        
+    class IWidget(ExtensionInterface):
+        pass
+        
+    class Cog(Component):
+        implements(ICog)
+        
+    class CogWidget(Cog):
+        implements(IWidget)
+        
+    class NoCogWidget(Cog):
+        implementsOnly(IWidget)
+        
+    class Machine(Component):
+        cogs = ExtensionPoint(ICog)
+        widgets = ExtensionPoint(IWidget)
+        
+    mgr = ComponentManager()
+    machine = Machine(mgr)
+    
+    assert len(machine.cogs) == 2
+    assert _has_exactly(2, Cog, machine.cogs)
+    assert _has_exactly(1, CogWidget, machine.cogs)
+    assert _has_exactly(0, NoCogWidget, machine.cogs)
+    
+    assert len(machine.widgets) == 2
+    assert _has_exactly(1, CogWidget, machine.widgets)
+    assert _has_exactly(1, NoCogWidget, machine.widgets)
+    
     
 def _has_exactly(k, T, l):
     """
