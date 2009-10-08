@@ -236,6 +236,45 @@ def test_whitelist_mgr():
     assert _has_exactly(0, BadCog, widget.cogs)
 
 
+def test_pattern_manager():
+    _clear_registry()
+    from giblets import Component, PatternComponentManager, ExtensionPoint, ExtensionInterface, implements
+    
+    class ICog(ExtensionInterface):
+        pass
+
+    class Widget(Component):
+        cogs = ExtensionPoint(ExtensionInterface)
+
+    class GoodCog(Component):
+        implements(ICog)
+
+    class BadCog(Component):
+        implements(ICog)
+
+    mgr = PatternComponentManager()
+    widget = Widget(mgr)
+
+    # to start with, everything is disabled...
+    assert _has_exactly(0, GoodCog, widget.cogs)
+    assert _has_exactly(0, BadCog, widget.cogs)
+
+    # easy to enable everything...
+    mgr.append_pattern('*', enable=True)
+    assert _has_exactly(1, GoodCog, widget.cogs)
+    assert _has_exactly(1, BadCog, widget.cogs)
+
+    # now just disable the bad one
+    mgr.append_pattern('tests.test_core.BadCog', enable=False)
+    assert _has_exactly(1, GoodCog, widget.cogs)
+    assert _has_exactly(0, BadCog, widget.cogs)
+    
+    # disable all the test core components...
+    mgr.append_pattern('tests.test_core.*', enable=False)    
+    assert _has_exactly(0, GoodCog, widget.cogs)
+    assert _has_exactly(0, BadCog, widget.cogs)
+    
+
 def test_custom_mgr():
     _clear_registry()
     from giblets import Component, ComponentManager, ExtensionPoint, ExtensionInterface, implements

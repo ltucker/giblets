@@ -18,12 +18,15 @@
 #         Christopher Lenz <cmlenz@gmx.de>
 
 
+import fnmatch
+import re
 from zope.interface import Interface, implementedBy, implements, implementsOnly
 from zope.interface.advice import addClassAdvisor
 
 __all__ = ['Component', 'ComponentManager', 'ExtensionPoint', 'ExtensionInterface', 
            'implements', 'implementsOnly', 'ExtensionError',  'provides_extensions', 
-           'BlacklistComponentManager', 'WhitelistComponentManager']
+           'BlacklistComponentManager', 'WhitelistComponentManager', 
+           'PatternComponentManager']
 
 class ExtensionError(Exception):
     """Exception for extension related errors."""
@@ -350,4 +353,28 @@ class WhitelistComponentManager(ComponentManager):
         enabled.
         """
         return _component_id(component) in self.whitelist
+
+class PatternComponentManager(ComponentManager):
+    """
+    A ComponentManager which enables and disables components
+    based on an ordered list of wildcard patterns like foo.bar.* 
+    etc.
+    """
     
+    def __init__(self, *args, **kw):
+        ComponentManager.__init__(self, *args, **kw)
+        self._patterns = []
+
+    def append_pattern(self, pattern, enable):
+        if isinstance(pattern, basestring):
+            pattern = re.compile(fnmatch.translate(pattern))
+        self._patterns.append((pattern, enable))
+        
+    def is_component_enabled(self, component):
+        enabled = False
+        comp_id = _component_id(component)
+        for (pat, state) in self._patterns:
+            if pat.match(comp_id) is not None:
+                enabled = state
+        return enabled
+        
