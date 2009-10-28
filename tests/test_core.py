@@ -47,10 +47,10 @@ def test_extension_reg():
     train1 = Train(mgr1)
     
     # components are singletons w/ respect to manager
-    assert train1 == Train(mgr1)
+    assert id(train1) == id(Train(mgr1))
     
     # check that all of the extensions for the extension point were registered
-    for cls in [EngineCar, PassengerCar, CafeCar, CabooseCar]:
+    for cls in (EngineCar, PassengerCar, CafeCar, CabooseCar):
         assert _has_exactly(1, cls, train1.cars)
     
     # check that the Zebra is not a part of the train
@@ -60,18 +60,18 @@ def test_extension_reg():
     # check the same stuff...
     mgr2 = ComponentManager()
     train2 = Train(mgr2)
-    assert train2 == Train(mgr2)
-    for cls in [EngineCar, PassengerCar, CafeCar, CabooseCar]:
+    assert id(train2) == id(Train(mgr2))
+    for cls in (EngineCar, PassengerCar, CafeCar, CabooseCar):
         assert _has_exactly(1, cls, train2.cars)
     assert _has_exactly(0, Zebra, train2.cars)
 
     # now check that the trains and extensions produced by the
     # different component managers are different.
     assert train1 != train2
-    for cls in [EngineCar, PassengerCar, CafeCar, CabooseCar]:
-        i1 = filter(lambda x: isinstance(x, cls), train1.cars)[0]
-        i2 = filter(lambda x: isinstance(x, cls), train2.cars)[0]
-        assert i1 != i2
+    for cls in (EngineCar, PassengerCar, CafeCar, CabooseCar):
+        i1 = [x for x in train1.cars if isinstance(x, cls)][0]
+        i2 = [x for x in train2.cars if isinstance(x, cls)][0]
+        assert id(i1) != id(i2)
         
         
 def test_multi_extension():
@@ -117,7 +117,7 @@ def test_multi_extension():
     class FlyingBaloneyTruck(Component):
         """
         This class is a flying car, it is also 
-        therefor wheeled and flying because the 
+        therefore wheeled and flying because the 
         interface inherits from both.
         """
         implements(IFlyingCar)
@@ -125,7 +125,7 @@ def test_multi_extension():
 
     class WheeledBalloon(Component):
         """
-        This class is wheeled and flys, but is 
+        This class is wheeled and flying, but is 
         not a flying car. 
         """
         implements(IWheeledVehicle, IFlyingVehicle)
@@ -294,10 +294,7 @@ def test_custom_mgr():
     # custom component manager
     class FilterComponentManager(ComponentManager):
         def is_component_enabled(self, cls):
-            if cls == BadCog:
-                return False
-            else:
-                return True
+            return cls != BadCog
     
     mgr = FilterComponentManager()
     widget = Widget(mgr)
@@ -422,10 +419,10 @@ def test_implementsOnly():
     
 def _has_exactly(k, T, l):
     """
-    test that the list L has exactly k members that are 
+    test that the list l has exactly k members that are 
     instances of the type T
     """
-    return len(filter(lambda x: isinstance(x, T), l)) == k
+    return sum(1 for x in l if isinstance(x, T)) == k
 
 def _clear_registry():
     from giblets.core import ComponentMeta
