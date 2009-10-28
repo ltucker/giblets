@@ -69,8 +69,8 @@ def test_extension_reg():
     # different component managers are different.
     assert train1 != train2
     for cls in (EngineCar, PassengerCar, CafeCar, CabooseCar):
-        i1 = [x for x in train1.cars if isinstance(x, cls)][0]
-        i2 = [x for x in train2.cars if isinstance(x, cls)][0]
+        i1 = (x for x in train1.cars if isinstance(x, cls)).next()
+        i2 = (x for x in train2.cars if isinstance(x, cls)).next()
         assert id(i1) != id(i2)
         
         
