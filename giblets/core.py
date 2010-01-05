@@ -20,10 +20,10 @@
 
 import fnmatch
 import re
-from zope.interface import Interface, implementedBy, implements, implementsOnly
+from zope.interface import Attribute, Interface, implementedBy, implements, implementsOnly
 from zope.interface.advice import addClassAdvisor
 
-__all__ = ['Component', 'ComponentManager', 'ExtensionPoint', 'ExtensionInterface', 
+__all__ = ['Attribute', 'Component', 'ComponentManager', 'ExtensionPoint', 'ExtensionInterface', 
            'implements', 'implementsOnly', 'ExtensionError',  'provides_extensions', 
            'BlacklistComponentManager', 'WhitelistComponentManager', 
            'PatternComponentManager']
