@@ -49,7 +49,7 @@ class ExtensionPoint(property):
                        self.interface.__name__
 
     def extensions(self, component):
-        """Return a list of components that declare to implement the extension
+        """Return a list of components that declare they implement the extension
         point interface.
         """
         extensions = ComponentMeta._registry.get(self.interface, [])
@@ -77,7 +77,7 @@ class ComponentMeta(type):
             return new_class
 
         # Only override __init__ for Components not inheriting ComponentManager
-        if True not in [issubclass(x, ComponentManager) for x in bases]:
+        if not any(issubclass(x, ComponentManager) for x in bases):
             # Allow components to have a no-argument initializer so that
             # they don't need to worry about accepting the component manager
             # as argument and invoking the super-class initializer
