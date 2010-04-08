@@ -376,5 +376,6 @@ class PatternComponentManager(ComponentManager):
         for (pat, state) in self._patterns:
             if pat.match(comp_id) is not None:
                 enabled = state
+                break
         return enabled
-        
+
