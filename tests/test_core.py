@@ -265,12 +265,14 @@ def test_pattern_manager():
     assert _has_exactly(1, BadCog, widget.cogs)
 
     # now just disable the bad one
-    mgr.append_pattern('tests.test_core.BadCog', enable=False)
+    pat = mgr.build_pattern('tests.test_core.BadCog', enable=False)
+    mgr.patterns.insert(0, pat)
     assert _has_exactly(1, GoodCog, widget.cogs)
     assert _has_exactly(0, BadCog, widget.cogs)
     
     # disable all the test core components...
-    mgr.append_pattern('tests.test_core.*', enable=False)    
+    pat = mgr.build_pattern('tests.test_core.*', enable=False)
+    mgr.patterns.insert(0, pat)
     assert _has_exactly(0, GoodCog, widget.cogs)
     assert _has_exactly(0, BadCog, widget.cogs)
     

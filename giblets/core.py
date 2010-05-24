@@ -358,22 +358,44 @@ class PatternComponentManager(ComponentManager):
     """
     A ComponentManager which enables and disables components
     based on an ordered list of wildcard patterns like foo.bar.* 
-    etc.
+    etc. First match is taken. 
     """
     
     def __init__(self, *args, **kw):
         ComponentManager.__init__(self, *args, **kw)
-        self._patterns = []
+        self.patterns = []
 
-    def append_pattern(self, pattern, enable):
+    def build_pattern(self, pattern, enable):
+        """
+        create an entry suitable for insertion into the 
+        patterns list of this manager. 
+        
+        If pattern is a string, it is 
+        treated as a wildcard patten like foo.bar.*
+        
+        Otherwise, it is assumed pattern is a compiled
+        regular expression.
+        
+        eg: 
+        pat = mgr.build_pattern('foo.*', True)
+        mgr.patterns.insert(0, pat)
+        """
         if isinstance(pattern, basestring):
             pattern = re.compile(fnmatch.translate(pattern))
-        self._patterns.append((pattern, enable))
-        
+        return (pattern, enable)
+
+    def append_pattern(self, pattern, enable):
+        """
+        helper to add a pattern to the end of the 
+        list of patterns.
+        """
+        pat = self.build_pattern(pattern, enable)
+        self.patterns.append(pat)
+
     def is_component_enabled(self, component):
         enabled = False
         comp_id = _component_id(component)
-        for (pat, state) in self._patterns:
+        for (pat, state) in self.patterns:
             if pat.match(comp_id) is not None:
                 enabled = state
                 break
