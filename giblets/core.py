@@ -13,7 +13,7 @@
 # individuals. For the exact contribution history, see the revision
 # history and logs, available at http://trac.edgewall.org/log/.
 #
-# Author: Luke Tucker <ltucker@openplans.org>
+# Author: Luke Tucker <voxluci@gmail.com>
 #         Jonas Borgström <jonas@edgewall.com>
 #         Christopher Lenz <cmlenz@gmx.de>
 

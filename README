@@ -1,6 +1,8 @@
 Giblets
 ========
 
+http://github.com/ltucker/giblets
+
 Giblets is a simple plugin system based on the component architecture 
 of Trac ( http://trac.edgewall.org/ )  Although the packages and classes 
 are different, for a good conceptual overview, see:
