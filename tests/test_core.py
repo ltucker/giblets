@@ -8,10 +8,121 @@
 #
 # Author: Luke Tucker <voxluci@gmail.com>
 #
+from helpers import *
+
+def test_implemented_by():
+    clear_registry()
+    from giblets import Component, ComponentManager, ExtensionPoint
+    from giblets import ExtensionInterface, implements, implemented_by
+
+    class IFoo(ExtensionInterface):
+        pass
+        
+    class IBar(ExtensionInterface):
+        pass
+        
+    class Foo(Component):
+        implements(IFoo)
+    
+    class Bar(Component):
+        implements(IBar)
+        
+    mgr = ComponentManager()
+    foo = Foo(mgr)
+    bar = Bar(mgr)
+    
+    assert IFoo in implemented_by(Foo)
+    assert IFoo in implemented_by(foo)
+    assert len(list(implemented_by(Foo))) == len(list(implemented_by(foo))) == 1
+        
+    assert IBar in implemented_by(Bar)
+    assert IBar in implemented_by(bar)
+    assert len(list(implemented_by(Bar))) == len(list(implemented_by(bar))) == 1        
+
+def test_is_implemented_by():
+    from giblets import Component, ComponentManager, ExtensionPoint
+    from giblets import ExtensionInterface, implements, is_implemented_by
+
+    class IFoo(ExtensionInterface):
+        pass
+        
+    class IBar(ExtensionInterface):
+        pass
+        
+    class Foo(Component):
+        implements(IFoo)
+    
+    class Bar(Component):
+        implements(IBar)
+        
+    mgr = ComponentManager()
+    foo = Foo(mgr)
+    bar = Bar(mgr)
+    
+    assert is_implemented_by(Foo, IFoo)
+    assert is_implemented_by(foo, IFoo)
+    assert not is_implemented_by(Foo, IBar)
+    assert not is_implemented_by(foo, IBar)
+    
+    assert is_implemented_by(Bar, IBar)
+    assert is_implemented_by(bar, IBar)
+    assert not is_implemented_by(Bar, IFoo)
+    assert not is_implemented_by(bar, IFoo)
+
+def test_is_implemented_by_implements_only():
+    
+    from giblets import Component, ComponentManager, ExtensionPoint
+    from giblets import ExtensionInterface, implements, is_implemented_by
+    from giblets import implements_only
+
+    class IVehicle(ExtensionInterface):
+        pass
+
+    class IFloat(ExtensionInterface):
+        pass
+
+    class IBoat(IVehicle):
+        pass
+
+    class Sailboat(Component):
+        implements(IBoat, IFloat)
+
+    mgr = ComponentManager()
+
+    sailboat = Sailboat(mgr)
+    assert is_implemented_by(Sailboat, IBoat)
+    assert is_implemented_by(sailboat, IBoat)
+    assert is_implemented_by(Sailboat, IFloat)
+    assert is_implemented_by(sailboat, IFloat)
+    assert is_implemented_by(Sailboat, IVehicle)
+    assert is_implemented_by(sailboat, IVehicle)
+
+
+    class Sloop(Sailboat):
+       pass
+
+    sloop = Sloop(mgr)
+    assert is_implemented_by(Sloop, IBoat)
+    assert is_implemented_by(sloop, IBoat)
+    assert is_implemented_by(Sloop, IFloat)
+    assert is_implemented_by(sloop, IFloat)
+    assert is_implemented_by(Sloop, IVehicle)
+    assert is_implemented_by(sloop, IVehicle)
+
+    class BoatWithAHole(Sailboat):
+        implements_only(IBoat)
+
+    bwah = BoatWithAHole
+    assert is_implemented_by(BoatWithAHole, IBoat)
+    assert is_implemented_by(bwah, IBoat)
+    assert not is_implemented_by(BoatWithAHole, IFloat)
+    assert not is_implemented_by(bwah, IFloat)
+    assert is_implemented_by(BoatWithAHole, IVehicle)
+    assert is_implemented_by(bwah, IVehicle)
 
 
 def test_extension_reg():
-    _clear_registry()
+    clear_registry()
     from giblets import Component, ComponentManager, ExtensionPoint, ExtensionInterface, implements
 
 
@@ -51,10 +162,10 @@ def test_extension_reg():
     
     # check that all of the extensions for the extension point were registered
     for cls in (EngineCar, PassengerCar, CafeCar, CabooseCar):
-        assert _has_exactly(1, cls, train1.cars)
+        assert has_exactly(1, cls, train1.cars)
     
     # check that the Zebra is not a part of the train
-    assert _has_exactly(0, Zebra, train1.cars)
+    assert has_exactly(0, Zebra, train1.cars)
     
     # create a different component manager and the train associated with it, 
     # check the same stuff...
@@ -62,8 +173,8 @@ def test_extension_reg():
     train2 = Train(mgr2)
     assert id(train2) == id(Train(mgr2))
     for cls in (EngineCar, PassengerCar, CafeCar, CabooseCar):
-        assert _has_exactly(1, cls, train2.cars)
-    assert _has_exactly(0, Zebra, train2.cars)
+        assert has_exactly(1, cls, train2.cars)
+    assert has_exactly(0, Zebra, train2.cars)
 
     # now check that the trains and extensions produced by the
     # different component managers are different.
@@ -75,7 +186,7 @@ def test_extension_reg():
         
         
 def test_multi_extension():
-    _clear_registry()
+    clear_registry()
     from giblets import Component, ComponentManager, ExtensionPoint, ExtensionInterface, implements
     
     # set up some scenarios that test components providing multiple 
@@ -134,158 +245,36 @@ def test_multi_extension():
     
     # check that wheeled vehicles are in the parking lot
     parking_lot = ParkingLot(mgr)
-    assert _has_exactly(1, Sedan, parking_lot.vehicles)
-    assert _has_exactly(0, Helicopter, parking_lot.vehicles)
-    assert _has_exactly(1, FlyingBaloneyTruck, parking_lot.vehicles)
-    assert _has_exactly(1, WheeledBalloon, parking_lot.vehicles)
+    assert has_exactly(1, Sedan, parking_lot.vehicles)
+    assert has_exactly(0, Helicopter, parking_lot.vehicles)
+    assert has_exactly(1, FlyingBaloneyTruck, parking_lot.vehicles)
+    assert has_exactly(1, WheeledBalloon, parking_lot.vehicles)
     
     # check that flying vehicles are in the airport
     airport = Airport(mgr)
-    assert _has_exactly(0, Sedan, airport.vehicles)
-    assert _has_exactly(1, Helicopter, airport.vehicles)
-    assert _has_exactly(1, FlyingBaloneyTruck, airport.vehicles)
-    assert _has_exactly(1, WheeledBalloon, airport.vehicles)
+    assert has_exactly(0, Sedan, airport.vehicles)
+    assert has_exactly(1, Helicopter, airport.vehicles)
+    assert has_exactly(1, FlyingBaloneyTruck, airport.vehicles)
+    assert has_exactly(1, WheeledBalloon, airport.vehicles)
     
     # check that flying cars are in the flying parking lot
     flying_lot = FlyingParkingLot(mgr)
-    assert _has_exactly(0, Sedan, flying_lot.vehicles)
-    assert _has_exactly(0, Helicopter, flying_lot.vehicles)
-    assert _has_exactly(1, FlyingBaloneyTruck, flying_lot.vehicles)
-    assert _has_exactly(0, WheeledBalloon, flying_lot.vehicles)
+    assert has_exactly(0, Sedan, flying_lot.vehicles)
+    assert has_exactly(0, Helicopter, flying_lot.vehicles)
+    assert has_exactly(1, FlyingBaloneyTruck, flying_lot.vehicles)
+    assert has_exactly(0, WheeledBalloon, flying_lot.vehicles)
     
-def test_blacklist_mgr():
-    _clear_registry()
-    from giblets import Component, BlacklistComponentManager, ExtensionPoint, ExtensionInterface, implements
-    
-    class ICog(ExtensionInterface):
-        pass
-        
-    class Widget(Component):
-        cogs = ExtensionPoint(ExtensionInterface)
-     
-    class GoodCog(Component):
-        implements(ICog)
-        
-    class BadCog(Component):
-        implements(ICog)
-        
-    # first no restrtictions, both should show up
-    mgr = BlacklistComponentManager()
-    widget = Widget(mgr)
-    assert _has_exactly(1, GoodCog, widget.cogs)
-    assert _has_exactly(1, BadCog, widget.cogs)
-    
-    # try force-disabling in this mgr
-    mgr.disable_component(BadCog)
-    assert _has_exactly(1, GoodCog, widget.cogs)
-    assert _has_exactly(0, BadCog, widget.cogs)
-
-    # re-enable
-    mgr.enable_component(BadCog)
-    assert _has_exactly(1, GoodCog, widget.cogs)
-    assert _has_exactly(1, BadCog, widget.cogs)
-
-    mgr.disable_component('tests.test_core.BadCog')
-    assert _has_exactly(1, GoodCog, widget.cogs)
-    assert _has_exactly(0, BadCog, widget.cogs)
-
-    mgr.enable_component('tests.test_core.BadCog')
-    assert _has_exactly(1, GoodCog, widget.cogs)
-    assert _has_exactly(1, BadCog, widget.cogs)
-
-
-def test_whitelist_mgr():
-    _clear_registry()
-    from giblets import Component, WhitelistComponentManager, ExtensionPoint, ExtensionInterface, implements
-
-    class ICog(ExtensionInterface):
-        pass
-
-    class Widget(Component):
-        cogs = ExtensionPoint(ExtensionInterface)
-
-    class GoodCog(Component):
-        implements(ICog)
-
-    class BadCog(Component):
-        implements(ICog)
-
-    # first nothing specified, nothing should show up
-    mgr = WhitelistComponentManager()
-    widget = Widget(mgr)
-    assert _has_exactly(0, GoodCog, widget.cogs)
-    assert _has_exactly(0, BadCog, widget.cogs)
-
-    # enable only the GoodCog
-    mgr.enable_component(GoodCog)
-    assert _has_exactly(1, GoodCog, widget.cogs)
-    assert _has_exactly(0, BadCog, widget.cogs)
-
-    # re-disable, should show nothing again
-    mgr.disable_component(GoodCog)
-    assert _has_exactly(0, GoodCog, widget.cogs)
-    assert _has_exactly(0, BadCog, widget.cogs)
-
-    # try enable by name...
-    mgr.enable_component('tests.test_core.GoodCog')
-    assert _has_exactly(1, GoodCog, widget.cogs)
-    assert _has_exactly(0, BadCog, widget.cogs)
-
-    mgr.disable_component('tests.test_core.GoodCog')
-    assert _has_exactly(0, GoodCog, widget.cogs)
-    assert _has_exactly(0, BadCog, widget.cogs)
-
-
-def test_pattern_manager():
-    _clear_registry()
-    from giblets import Component, PatternComponentManager, ExtensionPoint, ExtensionInterface, implements
-    
-    class ICog(ExtensionInterface):
-        pass
-
-    class Widget(Component):
-        cogs = ExtensionPoint(ExtensionInterface)
-
-    class GoodCog(Component):
-        implements(ICog)
-
-    class BadCog(Component):
-        implements(ICog)
-
-    mgr = PatternComponentManager()
-    widget = Widget(mgr)
-
-    # to start with, everything is disabled...
-    assert _has_exactly(0, GoodCog, widget.cogs)
-    assert _has_exactly(0, BadCog, widget.cogs)
-
-    # easy to enable everything...
-    mgr.append_pattern('*', enable=True)
-    assert _has_exactly(1, GoodCog, widget.cogs)
-    assert _has_exactly(1, BadCog, widget.cogs)
-
-    # now just disable the bad one
-    pat = mgr.build_pattern('tests.test_core.BadCog', enable=False)
-    mgr.patterns.insert(0, pat)
-    assert _has_exactly(1, GoodCog, widget.cogs)
-    assert _has_exactly(0, BadCog, widget.cogs)
-    
-    # disable all the test core components...
-    pat = mgr.build_pattern('tests.test_core.*', enable=False)
-    mgr.patterns.insert(0, pat)
-    assert _has_exactly(0, GoodCog, widget.cogs)
-    assert _has_exactly(0, BadCog, widget.cogs)
     
 
 def test_custom_mgr():
-    _clear_registry()
+    clear_registry()
     from giblets import Component, ComponentManager, ExtensionPoint, ExtensionInterface, implements
 
     class ICog(ExtensionInterface):
         pass
 
     class Widget(Component):
-        cogs = ExtensionPoint(ExtensionInterface)
+        cogs = ExtensionPoint(ICog)
 
     class GoodCog(Component):
         implements(ICog)
@@ -300,11 +289,11 @@ def test_custom_mgr():
     
     mgr = FilterComponentManager()
     widget = Widget(mgr)
-    assert _has_exactly(1, GoodCog, widget.cogs)
-    assert _has_exactly(0, BadCog, widget.cogs)
+    assert has_exactly(1, GoodCog, widget.cogs)
+    assert has_exactly(0, BadCog, widget.cogs)
 
 def test_inherited_interfaces():
-    _clear_registry()
+    clear_registry()
     from giblets import Component, ComponentManager, ExtensionPoint, ExtensionInterface, implements
 
     class IThing1(ExtensionInterface):
@@ -341,26 +330,26 @@ def test_inherited_interfaces():
     sorter = ThingSorter(mgr)
     
     assert len(sorter.thing1) == 3
-    assert _has_exactly(3, Thing1, sorter.thing1)
-    assert _has_exactly(2, Thing3, sorter.thing1)
-    assert _has_exactly(1, Thing4, sorter.thing1)
+    assert has_exactly(3, Thing1, sorter.thing1)
+    assert has_exactly(2, Thing3, sorter.thing1)
+    assert has_exactly(1, Thing4, sorter.thing1)
     
     assert len(sorter.thing2) == 3
-    assert _has_exactly(3, Thing2, sorter.thing2)
-    assert _has_exactly(2, Thing3, sorter.thing2)
-    assert _has_exactly(1, Thing4, sorter.thing2)
+    assert has_exactly(3, Thing2, sorter.thing2)
+    assert has_exactly(2, Thing3, sorter.thing2)
+    assert has_exactly(1, Thing4, sorter.thing2)
     
     assert len(sorter.thing3) == 2
-    assert _has_exactly(2, Thing3, sorter.thing3)
-    assert _has_exactly(1, Thing4, sorter.thing3)
+    assert has_exactly(2, Thing3, sorter.thing3)
+    assert has_exactly(1, Thing4, sorter.thing3)
     
     assert len(sorter.thing4) == 1
-    assert _has_exactly(1, Thing4, sorter.thing4)
+    assert has_exactly(1, Thing4, sorter.thing4)
     
     
     
 def test_abstract_component():
-    _clear_registry()
+    clear_registry()
     from giblets import Component, ComponentManager, ExtensionPoint, ExtensionInterface, implements
     
     class ISomething(ExtensionInterface):
@@ -381,11 +370,11 @@ def test_abstract_component():
     thingbox = ThingBox(mgr)
 
     assert len(thingbox.things) == 1
-    assert _has_exactly(1, ConcreteThing, thingbox.things)
+    assert has_exactly(1, ConcreteThing, thingbox.things)
     
-def test_implementsOnly():
-    _clear_registry()
-    from giblets import Component, ComponentManager, ExtensionPoint, ExtensionInterface, implements, implementsOnly
+def test_implements_only():
+    clear_registry()
+    from giblets import Component, ComponentManager, ExtensionPoint, ExtensionInterface, implements, implements_only
 
     class ICog(ExtensionInterface):
         pass
@@ -400,7 +389,7 @@ def test_implementsOnly():
         implements(IWidget)
         
     class NoCogWidget(Cog):
-        implementsOnly(IWidget)
+        implements_only(IWidget)
         
     class Machine(Component):
         cogs = ExtensionPoint(ICog)
@@ -410,23 +399,10 @@ def test_implementsOnly():
     machine = Machine(mgr)
     
     assert len(machine.cogs) == 2
-    assert _has_exactly(2, Cog, machine.cogs)
-    assert _has_exactly(1, CogWidget, machine.cogs)
-    assert _has_exactly(0, NoCogWidget, machine.cogs)
+    assert has_exactly(2, Cog, machine.cogs)
+    assert has_exactly(1, CogWidget, machine.cogs)
+    assert has_exactly(0, NoCogWidget, machine.cogs)
     
     assert len(machine.widgets) == 2
-    assert _has_exactly(1, CogWidget, machine.widgets)
-    assert _has_exactly(1, NoCogWidget, machine.widgets)
-    
-    
-def _has_exactly(k, T, l):
-    """
-    test that the list l has exactly k members that are 
-    instances of the type T
-    """
-    return sum(1 for x in l if isinstance(x, T)) == k
-
-def _clear_registry():
-    from giblets.core import ComponentMeta
-    ComponentMeta._registry = {}
-    ComponentMeta._components = []
+    assert has_exactly(1, CogWidget, machine.widgets)
+    assert has_exactly(1, NoCogWidget, machine.widgets)

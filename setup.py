@@ -13,7 +13,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='giblets',
-    version="0.1",
+    version="0.2",
     description="A simple plugin system based on the component architecture of Trac.",
     license="BSD",
     author="Luke Tucker",
