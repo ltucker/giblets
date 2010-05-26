@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Components &mdash; giblets v0.2 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.2',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="giblets v0.2 documentation" href="index.html" />
+    <link rel="next" title="Interfaces in depth" href="interfaces.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="interfaces.html" title="Interfaces in depth"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">giblets v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="components">
+<h1>Components<a class="headerlink" href="#components" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="components-and-managers">
+<h2>Components and Managers<a class="headerlink" href="#components-and-managers" title="Permalink to this headline">¶</a></h2>
+<p>A <tt class="docutils literal"><span class="pre">Component</span></tt> is a singleton object that provides some concrete functionality to your application.  You can retrieve a Component similarly to constructing an object, but you will always receive the same object in any given context.  Components are constructed with a <tt class="docutils literal"><span class="pre">ComponentManager</span></tt> which handles things like what Components are enabled and disabled and making sure that only one instance of each Component is created.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">giblets</span> <span class="kn">import</span> <span class="n">Component</span><span class="p">,</span> <span class="n">ComponentManager</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mgr</span> <span class="o">=</span> <span class="n">ComponentManager</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">AuthenticationService</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+<span class="gp">... </span>      <span class="k">if</span> <span class="n">username</span> <span class="o">==</span> <span class="n">password</span><span class="p">:</span>
+<span class="gp">... </span>          <span class="k">return</span> <span class="bp">True</span>
+<span class="gp">... </span>      <span class="k">return</span> <span class="bp">False</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">auth</span> <span class="o">=</span> <span class="n">AuthenticationService</span><span class="p">(</span><span class="n">mgr</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">auth</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="s">&#39;joe&#39;</span><span class="p">,</span> <span class="s">&#39;joe&#39;</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>You will get the same object if you ask for the Component again:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">id</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">AuthenticationService</span><span class="p">(</span><span class="n">mgr</span><span class="p">))</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>One is often enough, but technically speaking, Components are only singletons with respect to the  <tt class="docutils literal"><span class="pre">ComponentManager</span></tt> they are requested with.  It may be reasonable in some circumstances to maintain multiple non-interacting contexts within a single application.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">mgr2</span> <span class="o">=</span> <span class="n">ComponentManager</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">id</span><span class="p">(</span><span class="n">auth</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">AuthenticationService</span><span class="p">(</span><span class="n">mgr2</span><span class="p">))</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="extending-components">
+<h2>Extending Components<a class="headerlink" href="#extending-components" title="Permalink to this headline">¶</a></h2>
+<p>Any <tt class="docutils literal"><span class="pre">Component</span></tt> can declare an <tt class="docutils literal"><span class="pre">ExtensionPoint</span></tt> to indicate a particular area where it can be extended by other Components.  Each ExtensionPoint has an associated <tt class="docutils literal"><span class="pre">ExtensionInterface</span></tt> describing the expectations for extending functionality.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">giblets</span> <span class="kn">import</span> <span class="n">ExtensionPoint</span><span class="p">,</span> <span class="n">ExtensionInterface</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ITool</span><span class="p">(</span><span class="n">ExtensionInterface</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">ToolBox</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">tools</span> <span class="o">=</span> <span class="n">ExtensionPoint</span><span class="p">(</span><span class="n">ITool</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tool_box</span> <span class="o">=</span> <span class="n">ToolBox</span><span class="p">(</span><span class="n">mgr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Components can declare that they implement an ExtensionInterface using <tt class="docutils literal"><span class="pre">implements</span></tt>.  Any component declaring to implement an ExtensionInterface will automatically appear &#8216;in&#8217; corresponding ExtensionPoints.  The ExtensionPoint behaves similarly to a list:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">giblets</span> <span class="kn">import</span> <span class="n">implements</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">EraserTool</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="n">implements</span><span class="p">(</span><span class="n">ITool</span><span class="p">)</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">pass</span> <span class="c"># erase...</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tool_box</span><span class="o">.</span><span class="n">tools</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">EraserTool</span><span class="p">(</span><span class="n">mgr</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Any Component may declare as many ExtensionPoints as needed, and since things that implement ExtensionInterfaces are also Components, extensions can also have their own ExtensionPoints.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">IBrushShape</span><span class="p">(</span><span class="n">ExtensionInterface</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">PaintBrush</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">implements</span><span class="p">(</span><span class="n">ITool</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">shapes</span> <span class="o">=</span> <span class="n">ExtensionPoint</span><span class="p">(</span><span class="n">IBrushShape</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span> <span class="k">pass</span> <span class="c"># paint at x,y</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">RoundBrush</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">implements</span><span class="p">(</span><span class="n">IBrushShape</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tool_box</span><span class="o">.</span><span class="n">tools</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shapes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">RoundBrush</span><span class="p">(</span><span class="n">mgr</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Components</a><ul>
+<li><a class="reference external" href="#components-and-managers">Components and Managers</a></li>
+<li><a class="reference external" href="#extending-components">Extending Components</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="introduction.html"
+                                  title="previous chapter">Introduction</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="interfaces.html"
+                                  title="next chapter">Interfaces in depth</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/components.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="interfaces.html" title="Interfaces in depth"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li><a href="index.html">giblets v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Luke Tucker.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

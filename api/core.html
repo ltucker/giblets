@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>giblets.core &mdash; giblets v0.2 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="giblets v0.2 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li><a href="../index.html">giblets v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-giblets.core">
+<h1>giblets.core<a class="headerlink" href="#module-giblets.core" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="giblets.core.Attribute">
+<em class="property">class </em><tt class="descclassname">giblets.core.</tt><tt class="descname">Attribute</tt><big>(</big><em>__name__</em>, <em>__doc__=''</em><big>)</big><a class="headerlink" href="#giblets.core.Attribute" title="Permalink to this definition">¶</a></dt>
+<dd>Attribute descriptions</dd></dl>
+
+<dl class="class">
+<dt id="giblets.core.Component">
+<em class="property">class </em><tt class="descclassname">giblets.core.</tt><tt class="descname">Component</tt><a class="headerlink" href="#giblets.core.Component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for components.</p>
+<p>Every component can declare what extension points it provides, as well as
+what extension points of other components it extends.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="giblets.core.ComponentManager">
+<em class="property">class </em><tt class="descclassname">giblets.core.</tt><tt class="descname">ComponentManager</tt><a class="headerlink" href="#giblets.core.ComponentManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>The component manager keeps a pool of active components.</p>
+<dl class="method">
+<dt id="giblets.core.ComponentManager.component_activated">
+<tt class="descname">component_activated</tt><big>(</big><em>component</em><big>)</big><a class="headerlink" href="#giblets.core.ComponentManager.component_activated" title="Permalink to this definition">¶</a></dt>
+<dd>Can be overridden by sub-classes so that special initialization for
+components can be provided.</dd></dl>
+
+<dl class="method">
+<dt id="giblets.core.ComponentManager.is_component_enabled">
+<tt class="descname">is_component_enabled</tt><big>(</big><em>cls</em><big>)</big><a class="headerlink" href="#giblets.core.ComponentManager.is_component_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Controlled by policy given at construction time, but can be overridden 
+by sub-classes.</p>
+<p>If this method returns False, the component with the given class will
+not be available.</p>
+<p>By default, this method returns True</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="giblets.core.ComponentManager.restrict">
+<tt class="descname">restrict</tt><big>(</big><em>policy</em><big>)</big><a class="headerlink" href="#giblets.core.ComponentManager.restrict" title="Permalink to this definition">¶</a></dt>
+<dd>restrict enabled components according to the policy 
+given &#8211; is_component_enabled will be delegated to the 
+object specified.</dd></dl>
+
+</dd></dl>
+
+<dl class="attribute">
+<dt id="giblets.core.ExtensionPoint">
+<tt class="descclassname">giblets.core.</tt><tt class="descname">ExtensionPoint</tt><a class="headerlink" href="#giblets.core.ExtensionPoint" title="Permalink to this definition">¶</a></dt>
+<dd>Marker class for extension points in components.</dd></dl>
+
+<dl class="function">
+<dt id="giblets.core.implements">
+<tt class="descclassname">giblets.core.</tt><tt class="descname">implements</tt><big>(</big><em>*interfaces</em><big>)</big><a class="headerlink" href="#giblets.core.implements" title="Permalink to this definition">¶</a></dt>
+<dd>Declare a list of ExtensionInterfaces implemented by a 
+Component.</dd></dl>
+
+<dl class="function">
+<dt id="giblets.core.implements_only">
+<tt class="descclassname">giblets.core.</tt><tt class="descname">implements_only</tt><big>(</big><em>*interfaces</em><big>)</big><a class="headerlink" href="#giblets.core.implements_only" title="Permalink to this definition">¶</a></dt>
+<dd>declare that a Component implements exactly the list 
+of ExtensionInterfaces specified, overriding any 
+inherited declarations of implemented ExtensionInterfaces.</dd></dl>
+
+<dl class="function">
+<dt id="giblets.core.implemented_by">
+<tt class="descclassname">giblets.core.</tt><tt class="descname">implemented_by</tt><big>(</big><em>thang</em><big>)</big><a class="headerlink" href="#giblets.core.implemented_by" title="Permalink to this definition">¶</a></dt>
+<dd>return the list of ExtensionInterfaces implemented by a Component
+or Component type.</dd></dl>
+
+<dl class="function">
+<dt id="giblets.core.is_implemented_by">
+<tt class="descclassname">giblets.core.</tt><tt class="descname">is_implemented_by</tt><big>(</big><em>cls</em>, <em>iface</em><big>)</big><a class="headerlink" href="#giblets.core.is_implemented_by" title="Permalink to this definition">¶</a></dt>
+<dd>returns True if cls implements the interface given</dd></dl>
+
+<dl class="exception">
+<dt id="giblets.core.ExtensionError">
+<em class="property">exception </em><tt class="descclassname">giblets.core.</tt><tt class="descname">ExtensionError</tt><a class="headerlink" href="#giblets.core.ExtensionError" title="Permalink to this definition">¶</a></dt>
+<dd>Exception for extension related errors.</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../_sources/api/core.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">giblets v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Luke Tucker.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>
