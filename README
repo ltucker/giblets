@@ -1,6 +1,10 @@
 Giblets
 ========
 
+Documentation:
+http://ltucker.github.com/giblets
+
+Source code:
 http://github.com/ltucker/giblets
 
 Giblets is a simple plugin system based on the component architecture 
