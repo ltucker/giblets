@@ -15,26 +15,23 @@ To grab the latest source right away::
 
     $ git clone http://github.com/ltucker/giblets.git
 
-
 Installation 
 ============
 
-You can install ``giblets`` from the Python Package Index (PyPI) or using a downloaded
-source tarball.
-
-from PyPI using ``pip``::
+You can install ``giblets`` from the Python Package Index (PyPI) using ``pip`` or ``easy_install``::
 
     $ pip install giblets
     
-from PyPI using ``easy_install``::
-
-    $ easy_install giblets
-
 If you downloaded a source tarball::
 
     $ tar -xzf giblets-x.y.tgz
     $ cd giblets
     $ python setup.py install
+
+You can also install the current development version of giblets with::
+
+    $ pip install giblets==dev
+
 
 
 Documentation 
