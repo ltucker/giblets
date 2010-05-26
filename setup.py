@@ -11,7 +11,7 @@
 
 from setuptools import setup, find_packages
 
-version = "0.2"
+version = "0.3"
 
 long_description = """
 Giblets is a simple plugin system based on the component architecture of 
@@ -32,12 +32,12 @@ To install::
 
     $ pip install giblets
 
-or
+or::
     
     $ easy_install giblets
 
 You can also install the current 
-`development version <http://github.com/ltucker/giblets/tarball/master#egg=giblets-dev`_ 
+`development version <http://github.com/ltucker/giblets/tarball/master#egg=giblets-dev>`_ 
 of giblets with ``pip install giblets==dev`` or ``easy_install giblets==dev`` 
 """
 
