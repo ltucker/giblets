@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>giblets.search &mdash; giblets v0.2 documentation</title>
+    <link rel="stylesheet" href="../sphinx_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../sphinx_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../sphinx_static/jquery.js"></script>
+    <script type="text/javascript" src="../sphinx_static/doctools.js"></script>
+    <link rel="top" title="giblets v0.2 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li><a href="../index.html">giblets v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-giblets.policy">
+<h1>giblets.search<a class="headerlink" href="#module-giblets.policy" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="giblets.policy.Blacklist">
+<em class="property">class </em><tt class="descclassname">giblets.policy.</tt><tt class="descname">Blacklist</tt><a class="headerlink" href="#giblets.policy.Blacklist" title="Permalink to this definition">¶</a></dt>
+<dd><p>policy that activates all Components that
+have not been specifically disabled.</p>
+<dl class="method">
+<dt id="giblets.policy.Blacklist.disable_component">
+<tt class="descname">disable_component</tt><big>(</big><em>component</em><big>)</big><a class="headerlink" href="#giblets.policy.Blacklist.disable_component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not allow the component specified to be activated
+for this ComponentManager.</p>
+<p>component may be a full class name string &#8216;foo.bar.Quux&#8217; 
+a Component type or an instance of a Component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="giblets.policy.Blacklist.enable_component">
+<tt class="descname">enable_component</tt><big>(</big><em>component</em><big>)</big><a class="headerlink" href="#giblets.policy.Blacklist.enable_component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow the component specified to be activated
+for this ComponentManager.</p>
+<p>component may be a full class name string &#8216;foo.bar.Quux&#8217; 
+a Component type or an instance of a Component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="giblets.policy.Blacklist.is_component_enabled">
+<tt class="descname">is_component_enabled</tt><big>(</big><em>component</em><big>)</big><a class="headerlink" href="#giblets.policy.Blacklist.is_component_enabled" title="Permalink to this definition">¶</a></dt>
+<dd>returns True unless the component specified 
+has been disabled.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="giblets.policy.Whitelist">
+<em class="property">class </em><tt class="descclassname">giblets.policy.</tt><tt class="descname">Whitelist</tt><a class="headerlink" href="#giblets.policy.Whitelist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Policy that activates only Components
+that have been specifically enabled.</p>
+<dl class="method">
+<dt id="giblets.policy.Whitelist.disable_component">
+<tt class="descname">disable_component</tt><big>(</big><em>component</em><big>)</big><a class="headerlink" href="#giblets.policy.Whitelist.disable_component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do not allow the component specified to be activated
+for this ComponentManager.</p>
+<p>component may be a full class name string &#8216;foo.bar.Quux&#8217; 
+a Component type or an instance of a Component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="giblets.policy.Whitelist.enable_component">
+<tt class="descname">enable_component</tt><big>(</big><em>component</em><big>)</big><a class="headerlink" href="#giblets.policy.Whitelist.enable_component" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow the component specified to be activated
+for this ComponentManager.</p>
+<p>component may be a full class name string &#8216;foo.bar.Quux&#8217; 
+a Component type or an instance of a Component.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="giblets.policy.Whitelist.is_component_enabled">
+<tt class="descname">is_component_enabled</tt><big>(</big><em>component</em><big>)</big><a class="headerlink" href="#giblets.policy.Whitelist.is_component_enabled" title="Permalink to this definition">¶</a></dt>
+<dd>returns False unless the component specified has been 
+enabled.</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="giblets.policy.Patterns">
+<em class="property">class </em><tt class="descclassname">giblets.policy.</tt><tt class="descname">Patterns</tt><a class="headerlink" href="#giblets.policy.Patterns" title="Permalink to this definition">¶</a></dt>
+<dd><p>A policy which enables and disables components
+based on an ordered list of wildcard patterns like foo.bar.* 
+etc. First match is taken.</p>
+<dl class="method">
+<dt id="giblets.policy.Patterns.append_pattern">
+<tt class="descname">append_pattern</tt><big>(</big><em>pattern</em>, <em>enable</em><big>)</big><a class="headerlink" href="#giblets.policy.Patterns.append_pattern" title="Permalink to this definition">¶</a></dt>
+<dd>helper to add a pattern to the end of the 
+list of patterns.</dd></dl>
+
+<dl class="method">
+<dt id="giblets.policy.Patterns.build_pattern">
+<tt class="descname">build_pattern</tt><big>(</big><em>pattern</em>, <em>enable</em><big>)</big><a class="headerlink" href="#giblets.policy.Patterns.build_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>create an entry suitable for insertion into the 
+patterns list of this manager.</p>
+<p>If pattern is a string, it is 
+treated as a wildcard patten like foo.bar.*</p>
+<p>Otherwise, it is assumed pattern is a compiled
+regular expression.</p>
+<p>eg: 
+pat = mgr.build_pattern(&#8216;foo.*&#8217;, True)
+mgr.patterns.insert(0, pat)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="../sphinx_sources/api/policy.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="../search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li><a href="../index.html">giblets v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Luke Tucker.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>

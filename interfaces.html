@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Interfaces in depth &mdash; giblets v0.2 documentation</title>
+    <link rel="stylesheet" href="sphinx_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="sphinx_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.2',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="sphinx_static/jquery.js"></script>
+    <script type="text/javascript" src="sphinx_static/doctools.js"></script>
+    <link rel="top" title="giblets v0.2 documentation" href="index.html" />
+    <link rel="next" title="Component Management" href="management.html" />
+    <link rel="prev" title="Components" href="components.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="management.html" title="Component Management"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Components"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">giblets v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="interfaces-in-depth">
+<h1>Interfaces in depth<a class="headerlink" href="#interfaces-in-depth" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="declaring-an-interface">
+<h2>Declaring an Interface<a class="headerlink" href="#declaring-an-interface" title="Permalink to this headline">¶</a></h2>
+<p>A giblets interface must be a direct or indirect subclass of <tt class="docutils literal"><span class="pre">ExtensionInterface</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">giblets</span> <span class="kn">import</span> <span class="n">ExtensionInterface</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">IFoo</span><span class="p">(</span><span class="n">ExtensionInterface</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="s">&quot;this works&quot;</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="interface-functions-and-attributes">
+<h2>Interface Functions and Attributes<a class="headerlink" href="#interface-functions-and-attributes" title="Permalink to this headline">¶</a></h2>
+<p>interfaces can declare expectations of classes that provide an interface by
+declaring stub functions and dummy attributes.  These aren&#8217;t enforced in any
+way, but help to clearly indicate what is expected to participate.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">giblets</span> <span class="kn">import</span> <span class="n">Attribute</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">IBall</span><span class="p">(</span><span class="n">ExtensionInterface</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">radius</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s">&#39;the radius of the ball&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">bounce</span><span class="p">():</span>
+<span class="gp">... </span>        <span class="s">&quot;perform the bounce action&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="implementing-interfaces">
+<h2>Implementing Interfaces<a class="headerlink" href="#implementing-interfaces" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<p>To implement an Extension interface, two things are necessary: the class
+must be a subclass of <tt class="docutils literal"><span class="pre">Component</span></tt> and the class must include an <tt class="docutils literal"><span class="pre">implements</span></tt>
+statement in its declaration listing the interfaces the component provides.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">giblets</span> <span class="kn">import</span> <span class="n">Component</span><span class="p">,</span> <span class="n">implements</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">BaseBall</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">implements</span><span class="p">(</span><span class="n">IBall</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">radius</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">bounce</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">print</span> <span class="s">&#39;thunk&#39;</span>
+</pre></div>
+</div>
+<p>It is fine to implement multiple interfaces:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">IBodyPart</span><span class="p">(</span><span class="n">ExtensionInterface</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">number_per_body</span> <span class="o">=</span> <span class="n">Attribute</span><span class="p">(</span><span class="s">&#39;how many of these are in a body&#39;</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">EyeBall</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">implements</span><span class="p">(</span><span class="n">IBall</span><span class="p">,</span> <span class="n">IBodyPart</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">radius</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">... </span>    <span class="n">number_per_body</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">bounce</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="k">print</span> <span class="s">&#39;squish&#39;</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+</blockquote>
+</div>
+<div class="section" id="inspecting-a-component-s-interfaces">
+<h2>Inspecting a Component&#8217;s Interfaces<a class="headerlink" href="#inspecting-a-component-s-interfaces" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<p>You can walk over the interfaces provided by a Component by using
+<tt class="docutils literal"><span class="pre">implemented_by</span></tt>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">giblets</span> <span class="kn">import</span> <span class="n">implemented_by</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">iface</span> <span class="ow">in</span> <span class="n">implemented_by</span><span class="p">(</span><span class="n">EyeBall</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span> <span class="n">iface</span><span class="o">.</span><span class="n">__name__</span>
+<span class="go">IBall</span>
+<span class="go">IBodyPart</span>
+</pre></div>
+</div>
+<p>You can test whether a Component provides an interface by calling <tt class="docutils literal"><span class="pre">is_implemented_by</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">giblets</span> <span class="kn">import</span> <span class="n">is_implemented_by</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">EyeBall</span><span class="p">,</span> <span class="n">IBall</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">EyeBall</span><span class="p">,</span> <span class="n">IFoo</span><span class="p">)</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</blockquote>
+</div>
+<div class="section" id="inheritance">
+<h2>Inheritance<a class="headerlink" href="#inheritance" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<p>Interfaces can also subclass other interfaces, and things
+will behave in a predictable way.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">IVehicle</span><span class="p">(</span><span class="n">ExtensionInterface</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">IFloat</span><span class="p">(</span><span class="n">ExtensionInterface</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">IBoat</span><span class="p">(</span><span class="n">IVehicle</span><span class="p">,</span> <span class="n">IFloat</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Sailboat</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">implements</span><span class="p">(</span><span class="n">IBoat</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">Sailboat</span><span class="p">,</span> <span class="n">IBoat</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">Sailboat</span><span class="p">,</span> <span class="n">IFloat</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">Sailboat</span><span class="p">,</span> <span class="n">IVehicle</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Likewise, you can subclass Components and inherit their interface
+declarations.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Sloop</span><span class="p">(</span><span class="n">Sailboat</span><span class="p">):</span>
+<span class="gp">... </span>   <span class="k">pass</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">Sloop</span><span class="p">,</span> <span class="n">IBoat</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">Sloop</span><span class="p">,</span> <span class="n">IFloat</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">Sloop</span><span class="p">,</span> <span class="n">IVehicle</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>But in some cases, this may be more than is desired.  In those cases,
+you can use <tt class="docutils literal"><span class="pre">implements_only</span></tt> instead of <tt class="docutils literal"><span class="pre">implements</span></tt></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">giblets</span> <span class="kn">import</span> <span class="n">implements_only</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">SunkenHull</span><span class="p">(</span><span class="n">Sailboat</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">implements_only</span><span class="p">(</span><span class="n">IVehicle</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">SunkenHull</span><span class="p">,</span> <span class="n">IBoat</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">SunkenHull</span><span class="p">,</span> <span class="n">IFloat</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">SunkenHull</span><span class="p">,</span> <span class="n">IVehicle</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Be careful though, this does not limit interface inheritance.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Sunfish</span><span class="p">(</span><span class="n">Sailboat</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">implements_only</span><span class="p">(</span><span class="n">IBoat</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">Sunfish</span><span class="p">,</span> <span class="n">IBoat</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">Sunfish</span><span class="p">,</span> <span class="n">IFloat</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">is_implemented_by</span><span class="p">(</span><span class="n">Sunfish</span><span class="p">,</span> <span class="n">IVehicle</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Interfaces in depth</a><ul>
+<li><a class="reference external" href="#declaring-an-interface">Declaring an Interface</a></li>
+<li><a class="reference external" href="#interface-functions-and-attributes">Interface Functions and Attributes</a></li>
+<li><a class="reference external" href="#implementing-interfaces">Implementing Interfaces</a></li>
+<li><a class="reference external" href="#inspecting-a-component-s-interfaces">Inspecting a Component&#8217;s Interfaces</a></li>
+<li><a class="reference external" href="#inheritance">Inheritance</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="components.html"
+                                  title="previous chapter">Components</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="management.html"
+                                  title="next chapter">Component Management</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="sphinx_sources/interfaces.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="management.html" title="Component Management"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="components.html" title="Components"
+             >previous</a> |</li>
+        <li><a href="index.html">giblets v0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2010, Luke Tucker.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.5.
+    </div>
+  </body>
+</html>
