@@ -50,8 +50,7 @@ class ExtensionPoint(property):
         """Return a list of components that declare they implement the extension
         point interface.
         """
-        extensions = ComponentMeta._registry.get(self.interface, [])
-        return filter(None, [component.compmgr[cls] for cls in extensions])
+        return component.compmgr.get_all(self.interface)
 
     def __repr__(self):
         """Return a textual representation of the extension point."""
@@ -252,7 +251,14 @@ class ComponentManager(object):
         """Return wether the given class is in the list of active components."""
         return _component_id(cls) in self.components
 
-    def __getitem__(self, cls):
+    def get_all(self, iface):
+        """
+        retrieves implementors of the interface specified.
+        """
+        return filter(None, [self._get_instance_of(cls) for cls in
+                      ComponentMeta._registry.get(iface, [])])
+
+    def _get_instance_of(self, cls):
         """Activate the component instance for the given class, or return the
         existing the instance if the component has already been activated.
         """

@@ -33,6 +33,7 @@ One is often enough, but technically speaking, Components are only singletons wi
 >>> id(auth) == id(AuthenticationService(mgr2))
 False
 
+
 Extending Components
 ====================
 
@@ -75,3 +76,11 @@ Any Component may declare as many ExtensionPoints as needed, and since things th
     ...
     >>> tool_box.tools[1].shapes[0] == RoundBrush(mgr)
     True
+    
+Discovering Interface Implementors 
+==================================
+
+Sometimes it is useful to find the implementors of a given ExtensionInterface outside the context of a Component.  In this case, you can just ask the ComponentManager to provide a list directly by using the ``get_all`` method::
+
+    >>> [tool.__class__.__name__ for tool in mgr.get_all(ITool)]
+    ['EraserTool', 'PaintBrush']

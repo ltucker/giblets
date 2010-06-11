@@ -163,9 +163,11 @@ def test_extension_reg():
     # check that all of the extensions for the extension point were registered
     for cls in (EngineCar, PassengerCar, CafeCar, CabooseCar):
         assert has_exactly(1, cls, train1.cars)
+        assert has_exactly(1, cls, mgr1.get_all(ITrainCar))
     
     # check that the Zebra is not a part of the train
     assert has_exactly(0, Zebra, train1.cars)
+    assert has_exactly(0, Zebra, mgr1.get_all(ITrainCar))
     
     # create a different component manager and the train associated with it, 
     # check the same stuff...
@@ -174,7 +176,10 @@ def test_extension_reg():
     assert id(train2) == id(Train(mgr2))
     for cls in (EngineCar, PassengerCar, CafeCar, CabooseCar):
         assert has_exactly(1, cls, train2.cars)
+        assert has_exactly(1, cls, mgr2.get_all(ITrainCar))
+
     assert has_exactly(0, Zebra, train2.cars)
+    assert has_exactly(0, Zebra, mgr2.get_all(ITrainCar))
 
     # now check that the trains and extensions produced by the
     # different component managers are different.
@@ -183,6 +188,12 @@ def test_extension_reg():
         i1 = (x for x in train1.cars if isinstance(x, cls)).next()
         i2 = (x for x in train2.cars if isinstance(x, cls)).next()
         assert id(i1) != id(i2)
+        
+        i1 = (x for x in mgr1.get_all(ITrainCar) if isinstance(x, cls)).next()
+        i2 = (x for x in mgr2.get_all(ITrainCar) if isinstance(x, cls)).next()
+
+        assert id(i1) != id(i2)
+        
         
         
 def test_multi_extension():
