@@ -18,7 +18,7 @@ giblets.core.ComponentManager.is_component_enabled method api/core.html
 giblets.policy.Whitelist.enable_component method api/policy.html
 giblets.core.ComponentManager.restrict method api/core.html
 giblets.policy.Whitelist class api/policy.html
-giblets.search.find_plugins_in_path function api/search.html
+giblets.policy.Blacklist.enable_component method api/policy.html
 giblets.policy.Patterns.build_pattern method api/policy.html
 giblets.policy.Blacklist.is_component_enabled method api/policy.html
 giblets.policy.Whitelist.disable_component method api/policy.html
@@ -26,5 +26,5 @@ giblets.policy.Whitelist.is_component_enabled method api/policy.html
 giblets.core.Attribute class api/core.html
 giblets.core.Component class api/core.html
 giblets.core.implements function api/core.html
-giblets.policy.Blacklist.enable_component method api/policy.html
+giblets.search.find_plugins_in_path function api/search.html
 giblets.policy.Patterns class api/policy.html

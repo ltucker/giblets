@@ -122,6 +122,14 @@
 </pre></div>
 </div>
 </div>
+<div class="section" id="discovering-interface-implementors">
+<h2>Discovering Interface Implementors<a class="headerlink" href="#discovering-interface-implementors" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes it is useful to find the implementors of a given ExtensionInterface outside the context of a Component.  In this case, you can just ask the ComponentManager to provide a list directly by using the <tt class="docutils literal"><span class="pre">get_all</span></tt> method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">tool</span><span class="o">.</span><span class="n">__class__</span><span class="o">.</span><span class="n">__name__</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">mgr</span><span class="o">.</span><span class="n">get_all</span><span class="p">(</span><span class="n">ITool</span><span class="p">)]</span>
+<span class="go">[&#39;EraserTool&#39;, &#39;PaintBrush&#39;]</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -135,6 +143,7 @@
 <li><a class="reference external" href="#">Components</a><ul>
 <li><a class="reference external" href="#components-and-managers">Components and Managers</a></li>
 <li><a class="reference external" href="#extending-components">Extending Components</a></li>
+<li><a class="reference external" href="#discovering-interface-implementors">Discovering Interface Implementors</a></li>
 </ul>
 </li>
 </ul>
