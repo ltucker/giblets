@@ -11,7 +11,7 @@
 
 from setuptools import setup, find_packages
 
-version = "0.2.1"
+version = "0.2.2"
 
 long_description = """
 Giblets is a simple plugin system based on the component architecture of 
