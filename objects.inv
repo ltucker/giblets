@@ -1,6 +1,6 @@
 # Sphinx inventory version 1
 # Project: giblets
-# Version: 0.2.2
+# Version: 0.2.1
 giblets.search mod api/search.html
 giblets.policy mod api/policy.html
 giblets.core mod api/core.html
